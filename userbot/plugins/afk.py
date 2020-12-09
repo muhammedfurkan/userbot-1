@@ -24,56 +24,58 @@ def subtract_time(start, end):
 
 @UserBot.on_message(((filters.group & filters.mentioned) | filters.private) & ~filters.me, group=3)
 async def collect_afk_messages(_, message: Message):
-    if AFK:
-        last_seen = subtract_time(datetime.now(), AFK_TIME)
-        is_group = True if message.chat.type in ['supergroup', 'group'] else False
-        CHAT_TYPE = GROUPS if is_group else USERS
+    if not AFK:
+        return
 
-        if GetChatID(message) not in CHAT_TYPE:
+    last_seen = subtract_time(datetime.now(), AFK_TIME)
+    is_group = message.chat.type in ['supergroup', 'group']
+    CHAT_TYPE = GROUPS if is_group else USERS
+
+    if GetChatID(message) not in CHAT_TYPE:
+        text = (
+            f"`Beep boop. This is an automated message.\n"
+            f"I am not available right now.\n"
+            f"Last seen: {last_seen}\n"
+            f"Here's why: ```{AFK_REASON.upper()}```\n"
+            f"See you after I'm done doing whatever I'm doing.`"
+        )
+        await UserBot.send_message(
+            chat_id=GetChatID(message),
+            text=text,
+            reply_to_message_id=message.message_id
+        )
+        CHAT_TYPE[GetChatID(message)] = 1
+        return
+    elif GetChatID(message) in CHAT_TYPE:
+        if CHAT_TYPE[GetChatID(message)] == 50:
             text = (
-                f"`Beep boop. This is an automated message.\n"
-                f"I am not available right now.\n"
+                f"`This is an automated message\n"
                 f"Last seen: {last_seen}\n"
-                f"Here's why: ```{AFK_REASON.upper()}```\n"
-                f"See you after I'm done doing whatever I'm doing.`"
+                f"This is the 10th time I've told you I'm AFK right now..\n"
+                f"I'll get to you when I get to you.\n"
+                f"No more auto messages for you`"
             )
             await UserBot.send_message(
                 chat_id=GetChatID(message),
                 text=text,
                 reply_to_message_id=message.message_id
             )
-            CHAT_TYPE[GetChatID(message)] = 1
+        elif CHAT_TYPE[GetChatID(message)] > 50:
             return
-        elif GetChatID(message) in CHAT_TYPE:
-            if CHAT_TYPE[GetChatID(message)] == 50:
-                text = (
-                    f"`This is an automated message\n"
-                    f"Last seen: {last_seen}\n"
-                    f"This is the 10th time I've told you I'm AFK right now..\n"
-                    f"I'll get to you when I get to you.\n"
-                    f"No more auto messages for you`"
-                )
-                await UserBot.send_message(
-                    chat_id=GetChatID(message),
-                    text=text,
-                    reply_to_message_id=message.message_id
-                )
-            elif CHAT_TYPE[GetChatID(message)] > 50:
-                return
-            elif CHAT_TYPE[GetChatID(message)] % 5 == 0:
-                text = (
-                    f"`Hey I'm still not back yet.\n"
-                    f"Last seen: {last_seen}\n"
-                    f"Still busy with ```{AFK_REASON.upper()}```\n"
-                    f"Try pinging a bit later.`"
-                )
-                await UserBot.send_message(
-                    chat_id=GetChatID(message),
-                    text=text,
-                    reply_to_message_id=message.message_id
-                )
+        elif CHAT_TYPE[GetChatID(message)] % 5 == 0:
+            text = (
+                f"`Hey I'm still not back yet.\n"
+                f"Last seen: {last_seen}\n"
+                f"Still busy with ```{AFK_REASON.upper()}```\n"
+                f"Try pinging a bit later.`"
+            )
+            await UserBot.send_message(
+                chat_id=GetChatID(message),
+                text=text,
+                reply_to_message_id=message.message_id
+            )
 
-        CHAT_TYPE[GetChatID(message)] += 1
+    CHAT_TYPE[GetChatID(message)] += 1
 
 
 @UserBot.on_message(filters.command("afk", ".") & filters.me, group=3)

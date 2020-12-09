@@ -21,7 +21,7 @@ async def summon_here(_, message: Message):
         if chat_id == message.chat.id:
             await message.edit("```Summon message for this group is already enabled...```")
 
-    elif chat_details is None:
+    else:
         SUMMON().add_chat_id(message)
         await message.edit("```Summon message for this group has been enabled!!```")
 
@@ -44,23 +44,25 @@ async def not_summoned_here(_, message: Message):
 async def summoned(_, message: Message):
     chat_details = SUMMON().find_chat_id(message)
 
-    if chat_details is not None:
-        if chat_details['chat_id'] == message.chat.id:
-            if not AFK:
-                try:
-                    last_send = chat_details['last_send']
-                    next_send = chat_details['next_send']
+    if (
+        chat_details is not None
+        and chat_details['chat_id'] == message.chat.id
+        and not AFK
+    ):
+        try:
+            last_send = chat_details['last_send']
+            next_send = chat_details['next_send']
 
-                    if (time.time() - last_send) >= next_send:
-                        await send_saved_image(message, "summoned_cat", "summoned_cat.jpg", )
-                        last_send = time.time()
-                        next_send = random_interval()
-                        SUMMON().update(message, last_send, next_send)
-                except Exception:
-                    await send_saved_image(message, "summoned_cat", "summoned_cat.jpg")
-                    last_send = time.time()
-                    next_send = random_interval()
-                    SUMMON().update(message, last_send, next_send)
+            if (time.time() - last_send) >= next_send:
+                await send_saved_image(message, "summoned_cat", "summoned_cat.jpg", )
+                last_send = time.time()
+                next_send = random_interval()
+                SUMMON().update(message, last_send, next_send)
+        except Exception:
+            await send_saved_image(message, "summoned_cat", "summoned_cat.jpg")
+            last_send = time.time()
+            next_send = random_interval()
+            SUMMON().update(message, last_send, next_send)
 
 
 @UserBot.on_message(filters.command('nextsummon', '.') & filters.me)

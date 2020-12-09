@@ -83,7 +83,7 @@ async def mock_text(_, message: Message):
         mock_t = " ".join(cmd[1:])
     elif message.reply_to_message and len(cmd) == 1:
         mock_t = message.reply_to_message.text
-    elif not message.reply_to_message and len(cmd) == 1:
+    elif len(cmd) == 1:
         await message.edit("I need something to mock")
         await asyncio.sleep(2)
         await message.delete()
@@ -138,7 +138,7 @@ async def weebify(_, message: Message):
         raw_text = " ".join(cmd[1:])
     elif message.reply_to_message and len(cmd) == 1:
         raw_text = message.reply_to_message.text
-    elif not message.reply_to_message and len(cmd) == 1:
+    elif len(cmd) == 1:
         await message.edit(f"`{weebify_text('Could not weebify...')}`")
         await asyncio.sleep(2)
         await message.delete()
@@ -156,7 +156,7 @@ async def vapor(_, message: Message):
         vapor_text = " ".join(cmd[1:])
     elif message.reply_to_message and len(cmd) == 1:
         vapor_text = message.reply_to_message.text
-    elif not message.reply_to_message and len(cmd) == 1:
+    elif len(cmd) == 1:
         await message.edit("`Ｇｉｖｅ ｓｏｍｅ ｔｅｘｔ ｆｏｒ ｖａｐｏｒ！`")
         await asyncio.sleep(2)
         await message.delete()
@@ -184,7 +184,7 @@ async def stretch(_, message: Message):
         stretch_text = " ".join(cmd[1:])
     elif message.reply_to_message and len(cmd) == 1:
         stretch_text = message.reply_to_message.text
-    elif not message.reply_to_message and len(cmd) == 1:
+    elif len(cmd) == 1:
         await message.edit("`Giiiiiiiv sooooooomeeeeeee teeeeeeext!`")
         await asyncio.sleep(2)
         await message.delete()
@@ -217,7 +217,7 @@ async def text_reverse(_, message: Message):
         reverse_text = " ".join(cmd[1:])
     elif message.reply_to_message and len(cmd) == 1:
         reverse_text = message.reply_to_message.text
-    elif not message.reply_to_message and len(cmd) == 1:
+    elif len(cmd) == 1:
         await message.edit("`Give me something to reverse`"[::-1])
         await asyncio.sleep(2)
         await message.delete()
@@ -240,7 +240,7 @@ async def flip_text(_, message):
         text = " ".join(cmd[1:])
     elif message.reply_to_message and len(cmd) == 1:
         text = message.reply_to_message.text
-    elif not message.reply_to_message and len(cmd) == 1:
+    elif len(cmd) == 1:
         await message.edit("`Give me something to reverse`"[::-1])
         await asyncio.sleep(2)
         await message.delete()

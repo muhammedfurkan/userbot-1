@@ -79,7 +79,7 @@ async def summon_here(_, message: Message):
     cmd = message.command
     if not message.reply_to_message and len(cmd) == 1:
         get_user = message.from_user.id
-    elif message.reply_to_message and len(cmd) == 1:
+    elif len(cmd) == 1:
         get_user = message.reply_to_message.from_user.id
     elif len(cmd) > 1:
         get_user = cmd[1]
@@ -106,13 +106,16 @@ async def summon_here(_, message: Message):
                 full_name=FullName(user),
                 user_id=user.id,
                 first_name=user.first_name,
-                last_name=user.last_name if user.last_name else "",
-                username=user.username if user.username else "",
+                last_name=user.last_name or "",
+                username=user.username or "",
                 last_online=LastOnline(user),
                 common_groups=len(common.chats),
-                bio=desc if desc else "`No bio set up.`"),
-            disable_web_page_preview=True)
-    elif user.photo:
+                bio=desc or "`No bio set up.`",
+            ),
+            disable_web_page_preview=True,
+        )
+
+    else:
         await UserBot.send_photo(
             message.chat.id,
             user_pic[0].file_id,
@@ -120,16 +123,18 @@ async def summon_here(_, message: Message):
                 full_name=FullName(user),
                 user_id=user.id,
                 first_name=user.first_name,
-                last_name=user.last_name if user.last_name else "",
-                username=user.username if user.username else "",
+                last_name=user.last_name or "",
+                username=user.username or "",
                 last_online=LastOnline(user),
                 profile_pics=pic_count,
                 common_groups=len(common.chats),
-                bio=desc if desc else "`No bio set up.`",
-                profile_pic_update=ProfilePicUpdate(user_pic)),
+                bio=desc or "`No bio set up.`",
+                profile_pic_update=ProfilePicUpdate(user_pic),
+            ),
             reply_to_message_id=ReplyCheck(message),
             file_ref=user_pic[0].file_ref,
         )
+
         await message.delete()
 
 

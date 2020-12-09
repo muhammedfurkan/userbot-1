@@ -46,8 +46,7 @@ def get_random_hex(chars=4):
     """ Generate random hex. limited to chars provided.
         If chars not provided then limit to 4
     """
-    my_hex = uuid.uuid4().hex[:chars]
-    return my_hex
+    return uuid.uuid4().hex[:chars]
 
 
 def get_mock_text(sentence):

@@ -22,10 +22,10 @@ text_apis_data = {
 }
 
 text_api_commands = []
-for x in text_apis_data:
+for x, value in text_apis_data.items():
     text_api_commands.append(x)
     if 'alts' in text_apis_data[x]:
-        for y in text_apis_data[x]['alts']:
+        for y in value['alts']:
             text_api_commands.append(y)
 
 

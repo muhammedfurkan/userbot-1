@@ -17,10 +17,10 @@ sticker_data = {
 }
 
 sticker_commands = []
-for x in sticker_data:
+for x, value in sticker_data.items():
     sticker_commands.append(x)
     if 'alts' in sticker_data[x]:
-        for y in sticker_data[x]['alts']:
+        for y in value['alts']:
             sticker_commands.append(y)
 
 
@@ -44,7 +44,7 @@ async def sticker_super_func(_, message: Message):
             sticker_text = " ".join(cmd[1:])
         elif message.reply_to_message and len(cmd) == 1:
             sticker_text = message.reply_to_message.text
-        elif not message.reply_to_message and len(cmd) == 1:
+        elif len(cmd) == 1:
             await message.edit(sticker['empty_message'])
             await asyncio.sleep(2)
             await message.delete()

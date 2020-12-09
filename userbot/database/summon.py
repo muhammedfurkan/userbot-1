@@ -44,9 +44,8 @@ class SUMMON:
 
         if exists is None:
             return False
-        else:
-            query = {
-                'chat_id': message.chat.id,
-            }
-            self.summon_table.delete_one(query)
-            return True
+        query = {
+            'chat_id': message.chat.id,
+        }
+        self.summon_table.delete_one(query)
+        return True

@@ -17,5 +17,4 @@ def database():
             password=DB_PASSWORD
         )
 
-    db = client[DB_NAME]
-    return db
+    return client[DB_NAME]
