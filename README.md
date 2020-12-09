@@ -1,21 +1,39 @@
 # Pyrogram Userbot
-
+![Python Version](https://img.shields.io/badge/Python-v3.8-blue)
+![Repo Size](https://img.shields.io/github/repo-size/athphane/userbot)
+[![Commit Activity](https://img.shields.io/github/commit-activity/w/athphane/userbot)](https://github.com/athphane/userbot/pulse)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/b10d40c60fc549299eeb7bda1c7501aa)](https://app.codacy.com/manual/athphane/userbot?utm_source=github.com&utm_medium=referral&utm_content=athphane/userbot&utm_campaign=Badge_Grade_Settings)
+[![HitCount](http://hits.dwyl.com/athphane/userbot.svg)](http://hits.dwyl.com/athphane/userbot)
+[![Contributors](https://img.shields.io/github/contributors/athphane/userbot)](https://github.com/athphane/userbot/graphs/contributors)
+![Last Commit](https://img.shields.io/github/last-commit/athphane/userbot/master)
+![Issues](https://img.shields.io/github/issues/athphane/userbot)
+![Pull Requests](https://img.shields.io/github/issues-pr/athphane/userbot)
+[![StyleCI](https://github.styleci.io/repos/216083990/shield?branch=master)](https://github.styleci.io/repos/216083990)
+[![License](https://img.shields.io/github/license/athphane/userbot)](LICENSE)
 
-A Telegram Userbot based on [Pyrogram](https://github.com/pyrogram/pyrogram)
+<img src="https://i.imgur.com/WXUgDHT.png" width="160" align="right">
+
+> A Telegram Userbot based on [Pyrogram](https://github.com/pyrogram/pyrogram)
+
+This repository contains the source code of a Telegram Userbot and the instructions for running a
+copy yourself. Beside its main purpose, the bot is featuring [**Pyrogram Asyncio**](https:////github.com/pyrogram/pyrogram/issues/181) and
+[**Smart Plugins**](https://docs.pyrogram.org/topics/smart-plugins); feel free to explore the source code to
+learn more about these topics.
 
 I assume you will read this whole README.md file before continuing.
 
-Development in progress.
+> Development in progress.
 
 ## Requirements
 You're gonna need to get the following programs and services either installed on your server
 or signed up for. You must do all. It is a cardinal sin if you don't.
 
 * `virtualenv` installed so that the packages don't interfere with other system packages.
+
 * [MongoDB](https://www.mongodb.com) on your server or a free server from 
 [MongoDB Atlas](https://www.mongodb.com/cloud/atlas). (I recommend Atlas as I used it during
 development with no issues.)
+
 * [carbon-now-cli](https://github.com/mixn/carbon-now-cli) on your server too generate code images for the
 [carbon.py](/userbot/plugins/carbon.py) module. I use this CLI tool cause I don't know and couldn't get selenium
 and chromedriver to work nicely on my server/code. I'll be nice and even give you the command to install this.
@@ -28,8 +46,9 @@ I assume you already have NPM installed.
 
 ## Installing
 *One Click Deploy*
+Quick Deploy on Heroku using the button down below:
 
-There is no one click deploy.. It was all a ruse. You have to deploy like how I deploy it...
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/athphane/userbot)
 
 *The way I deploy*
 ```bash
@@ -41,22 +60,33 @@ pip install -r requirements.txt
 python -m userbot.
 ```
 
+## Developing
+To add extra modules to the bot, simply add the code into [userbot/plugins](userbot/plugins). Each file
+that is added to the plugins directory should have the following code at a minimum.
+```python
+from pyrogram import Message, Filters
 
-### Some more setup needed
+from userbot import UserBot
 
-* Open file_ids.txt, remove EVERYTHING in that file and only put in ```{}```. That's it.
-That file is used for the [picture.py](/userbot/plugins/memes/pics_and_gifs.py) module so that it can send the
-images a second time much faster rather than to upload them again. In a later life I will make
-this file create itself.
+@UserBot.on_message(Filters.command('sample', ['.']))
+async def module_name(bot: UserBot, message: Message):
+    await message.edit(
+        "This is a sample module"
+    )
+```
 
+This example is only for Pyrogram on_message events. 
 
 ## Credits, and Thanks to
-* [Dan](https://t.me/haskell) for his [Pyrogram Library](https://github.com/pyrogram/pyrogram)
-* [Colin Shark](https://t.me/ColinShark) for his [PyroBot](https://git.colinshark.de/PyroBot/PyroBot) which helped with
+*  [Dan](https://t.me/haskell) for his [Pyrogram Library](https://github.com/pyrogram/pyrogram)
+
+*  [Colin Shark](https://t.me/ColinShark) for his [PyroBot](https://git.colinshark.de/PyroBot/PyroBot) which helped with
 most of the useful functions used.
-* The people at [MyPaperPlane](https://github.com/MyPaperPlane) for their [Telegram-UserBot](https://github.com/MyPaperPlane/Telegram-UserBot)
+
+*  The people at [MyPaperPlane](https://github.com/MyPaperPlane) for their [Telegram-UserBot](https://github.com/MyPaperPlane/Telegram-UserBot)
 that gave a ton of ideas on how and what modules to include in this userbot. 
-* [Baivaru](https://github.com/baivaru) for the ton of help that got me this far into making this repo. 
+
+*  [Baivaru](https://github.com/baivaru) for the ton of help that got me this far into making this repo. 
 
 ---
-Made with love from the Maldives <3
+<p align="center">Made with love from the Maldives ❤</p>

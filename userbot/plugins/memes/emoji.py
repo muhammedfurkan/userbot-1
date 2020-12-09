@@ -1,38 +1,63 @@
-from time import sleep
+import asyncio
 from collections import deque
-from userbot import UserBot
-from pyrogram import Filters, Message
+from random import randint
 
+from pyrogram import filters
+from pyrogram.types import Message
+from userbot import UserBot
 from userbot.plugins.help import add_command_help
 
+emojis = {
+    'moon': list("🌗🌘🌑🌒🌓🌔🌕🌖"),
+    'clock': list("🕙🕘🕗🕖🕕🕔🕓🕒🕑🕐🕛"),
+    'thunder': list("☀️🌤️⛅🌥️☁️🌩️🌧️⛈️⚡🌩️🌧️🌦️🌥️⛅🌤️☀️"),
+    'earth': list("🌏🌍🌎🌎🌍🌏🌍🌎"),
+    'heart': list("❤️🧡💛💚💙💜🖤"),
+}
+emoji_commands = [x for x in emojis]
 
-@UserBot.on_message(Filters.command("moon", ".") & Filters.me)
-async def moon(bot: UserBot, message: Message):
-    deq = deque(list("🌗🌘🌑🌒🌓🌔🌕🌖"))
+
+@UserBot.on_message(filters.command(emoji_commands, ".") & filters.me)
+async def emoji_cycle(_, message: Message):
+    deq = deque(emojis[message.command[0]])
     try:
-        for x in range(32):
-            sleep(0.2)
+        for _ in range(randint(16, 32)):
+            await asyncio.sleep(0.3)
             await message.edit("".join(deq), parse_mode=None)
             deq.rotate(1)
-    except:
+    except Exception:
         await message.delete()
 
 
-@UserBot.on_message(Filters.command("clock", ".") & Filters.me)
-async def clock(bot: UserBot, message: Message):
-    deq = deque(list("🕙🕘🕗🕖🕕🕔🕓🕒🕑🕐🕛"))
-    try:
-        for x in range(32):
-            sleep(0.2)
-            await message.edit("".join(deq), parse_mode=None)
-            deq.rotate(1)
-    except:
-        await message.delete()
+special_emojis_dict = {
+    'target': {'emoji': '🎯', 'help': 'The special target emoji'},
+    'dice': {'emoji': '🎲', 'help': 'The special dice emoji'},
+    'bb': {'emoji': '🏀', 'help': 'The special basketball emoji'},
+    'soccer': {'emoji': '⚽️', 'help': 'The special football emoji'},
+}
+special_emoji_commands = [x for x in special_emojis_dict]
 
+
+@UserBot.on_message(filters.command(special_emoji_commands, '.') & filters.me)
+async def special_emojis(_, message: Message):
+    emoji = special_emojis_dict[message.command[0]]
+    await message.delete()
+    await UserBot.send_dice(message.chat.id, emoji['emoji'])
+
+
+# Command help section
+special_emoji_help = [
+    ['.moon', 'Cycles all the phases of the moon emojis.'],
+    ['.clock', 'Cycles all the phases of the clock emojis.'],
+    ['.thunder', 'Cycles thunder.'],
+    ['.heart', 'Cycles heart emojis.'],
+    ['.earth `or` .globe', 'Make the world go round.']
+]
+
+for x in special_emojis_dict:
+    command = f'.{x}'
+    special_emoji_help.append([command, special_emojis_dict[x]['help']])
 
 add_command_help(
-    'emoji', [
-        ['.moon', 'Cycles all the phases of the moon emojis.'],
-        ['.clock', 'Cycles all the phases of the clock emojis.'],
-    ]
+    'emoji', special_emoji_help
 )

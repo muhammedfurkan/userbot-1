@@ -1,10 +1,13 @@
-from pyrogram import Filters, Message, User
-from pyrogram.api import functions
+from datetime import datetime
+from time import sleep
+
+from pyrogram import filters
+from pyrogram.raw import functions
+from pyrogram.types import Message, User
 from pyrogram.errors import PeerIdInvalid
+
 from userbot import UserBot
 from userbot.helpers.PyroHelpers import ReplyCheck
-from time import sleep
-from datetime import datetime
 from userbot.plugins.help import add_command_help
 
 WHOIS = (
@@ -54,10 +57,10 @@ def LastOnline(user: User):
         return datetime.fromtimestamp(user.status.date).strftime("%a, %d %b %Y, %H:%M:%S")
 
 
-async def GetCommon(bot, get_user):
-    common = await bot.send(
+async def GetCommon(get_user):
+    common = await UserBot.send(
         functions.messages.GetCommonChats(
-            user_id=await bot.resolve_peer(get_user),
+            user_id=await UserBot.resolve_peer(get_user),
             max_id=0,
             limit=0))
     return common
@@ -71,8 +74,8 @@ def ProfilePicUpdate(user_pic):
     return datetime.fromtimestamp(user_pic[0].date).strftime("%d.%m.%Y, %H:%M:%S")
 
 
-@UserBot.on_message(Filters.command('whois', ['.', '']) & Filters.me)
-async def summon_here(bot: UserBot, message: Message):
+@UserBot.on_message(filters.command('whois', ['.', '']) & filters.me)
+async def summon_here(_, message: Message):
     cmd = message.command
     if not message.reply_to_message and len(cmd) == 1:
         get_user = message.from_user.id
@@ -85,17 +88,17 @@ async def summon_here(bot: UserBot, message: Message):
         except ValueError:
             pass
     try:
-        user = await bot.get_users(get_user)
+        user = await UserBot.get_users(get_user)
     except PeerIdInvalid:
         await message.edit("I don't know that User.")
         sleep(2)
         await message.delete()
         return
-    desc = await bot.get_chat(get_user)
+    desc = await UserBot.get_chat(get_user)
     desc = desc.description
-    user_pic = await bot.get_profile_photos(user.id)
-    pic_count = await bot.get_profile_photos_count(user.id)
-    common = await GetCommon(bot, user.id)
+    user_pic = await UserBot.get_profile_photos(user.id)
+    pic_count = await UserBot.get_profile_photos_count(user.id)
+    common = await GetCommon(user.id)
 
     if not user.photo:
         await message.edit(
@@ -110,7 +113,7 @@ async def summon_here(bot: UserBot, message: Message):
                 bio=desc if desc else "`No bio set up.`"),
             disable_web_page_preview=True)
     elif user.photo:
-        await bot.send_photo(
+        await UserBot.send_photo(
             message.chat.id,
             user_pic[0].file_id,
             caption=WHOIS_PIC.format(

@@ -1,15 +1,17 @@
-from pyrogram import Filters, Message
-from userbot import UserBot
-from userbot.helpers.file_sending_helpers import send_saved_image
-from userbot.helpers.utility import random_interval, human_time
-from userbot.database.summon import SUMMON
-from userbot.plugins.afk import AFK
-from userbot.plugins.help import add_command_help
 import time
 
+from pyrogram import filters
+from pyrogram.types import Message
+from userbot import UserBot
+from userbot.database.summon import SUMMON
+from userbot.helpers.file_sending_helpers import send_saved_image
+from userbot.helpers.utility import random_interval, human_time
+from userbot.plugins.afk import AFK
+from userbot.plugins.help import add_command_help
 
-@UserBot.on_message(Filters.command('summonhere', '.') & Filters.me)
-async def summon_here(bot: UserBot, message: Message):
+
+@UserBot.on_message(filters.command('summonhere', '.') & filters.me)
+async def summon_here(_, message: Message):
     chat_details = SUMMON().find_chat_id(message)
 
     if chat_details is not None:
@@ -27,8 +29,8 @@ async def summon_here(bot: UserBot, message: Message):
     await message.delete()
 
 
-@UserBot.on_message(Filters.command('summonhere', '!') & Filters.me)
-async def not_summoned_here(bot: UserBot, message: Message):
+@UserBot.on_message(filters.command('summonhere', '!') & filters.me)
+async def not_summoned_here(_, message: Message):
     if SUMMON().delete_chat_id(message) is True:
         await message.edit("```Summon message disabled for this chat```")
     else:
@@ -38,8 +40,8 @@ async def not_summoned_here(bot: UserBot, message: Message):
     await message.delete()
 
 
-@UserBot.on_message(Filters.incoming & Filters.mentioned & ~Filters.reply)
-async def summoned(bot: UserBot, message: Message):
+@UserBot.on_message(filters.incoming & filters.mentioned & ~filters.reply)
+async def summoned(_, message: Message):
     chat_details = SUMMON().find_chat_id(message)
 
     if chat_details is not None:
@@ -50,19 +52,19 @@ async def summoned(bot: UserBot, message: Message):
                     next_send = chat_details['next_send']
 
                     if (time.time() - last_send) >= next_send:
-                        await send_saved_image(bot, message, "summoned_cat", "summoned_cat.jpg", )
+                        await send_saved_image(message, "summoned_cat", "summoned_cat.jpg", )
                         last_send = time.time()
                         next_send = random_interval()
                         SUMMON().update(message, last_send, next_send)
-                except:
-                    await send_saved_image(bot, message, "summoned_cat", "summoned_cat.jpg")
+                except Exception:
+                    await send_saved_image(message, "summoned_cat", "summoned_cat.jpg")
                     last_send = time.time()
                     next_send = random_interval()
                     SUMMON().update(message, last_send, next_send)
 
 
-@UserBot.on_message(Filters.command('nextsummon', '.') & Filters.me)
-async def next_summon(bot: UserBot, message: Message):
+@UserBot.on_message(filters.command('nextsummon', '.') & filters.me)
+async def next_summon(_, message: Message):
     chat_details = SUMMON().find_chat_id(message)
 
     if chat_details is not None:
@@ -76,7 +78,7 @@ async def next_summon(bot: UserBot, message: Message):
                 await message.edit(f"'''{human_time(seconds=int(delta))}'''")
                 time.sleep(6)
                 await message.delete()
-            except:
+            except Exception:
                 await message.edit("```This group does not have a summon message interval```")
                 time.sleep(2)
                 await message.delete()

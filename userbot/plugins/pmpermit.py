@@ -2,14 +2,23 @@
 # not happy how it works, especially the message deletion part. Maybe that is not supposed to be there
 
 
-# from userbot import UserBot, PM_PERMIT, PM_LIMIT
-# from pyrogram import Filters, Message
+# PM_PERMIT, PM_LIMIT
+from pyrogram import filters
+from pyrogram.types import Message
+from userbot import UserBot
+
+
 # from pyrogram.errors import FloodWait
 # from userbot.plugins.help import add_command_help
 # from userbot.database.pmpermit import PmPermit
 # from time import sleep
 #
 #
+
+@UserBot.on_message(filters.command('pmpermit', '.') & filters.me)
+async def pm_permit_enable(_, message: Message):
+    await message.delete()
+
 # UNAPPROVED_MSG = (
 #     "`Bleep blop! I'm a bot and this is an AUTOMATED MESSAGE..\n\n`"
 #     "`My master hasn't approved you to PM.`"
@@ -18,8 +27,8 @@
 # )
 #
 #
-# @UserBot.on_message(Filters.private & ~Filters.me)
-# async def incoming_pm(bot: UserBot, message: Message):
+# @UserBot.on_message(filters.private & ~Filters.me)
+# async def incoming_pm(_, message: Message):
 #     if PM_PERMIT:
 #         approved = PmPermit().check_if_approved(message.chat.id)
 #         warned = PmPermit().check_if_warned(message.chat.id)
@@ -37,12 +46,12 @@
 #                 dialogs = [x async for x in bot.iter_dialogs()]
 #                 for dialog in dialogs:
 #                     if dialog.chat.id == message.chat.id:
-#                         await bot.block_user(message.chat.id)
+#                         await UserBot.block_user(message.chat.id)
 #                         history = [x async for x in bot.iter_history(message.chat.id, reverse=True)]
 #                         message_ids = [x.message_id for x in history]
 #                         for item in history:
 #                             try:
-#                                 await bot.delete_messages(chat_id=message.chat.id, message_ids=[item.message_id])
+#                                 await UserBot.delete_messages(chat_id=message.chat.id, message_ids=[item.message_id])
 #                                 sleep(0.3)
 #                             except FloodWait as e:
 #                                 sleep(e.x)
@@ -50,21 +59,21 @@
 #                 PmPermit().increment_retard_level(message.chat.id)
 #
 #
-# @UserBot.on_message(Filters.private & Filters.me)
-# async def auto_approve_user_on_message(bot: UserBot, message: Message):
+# @UserBot.on_message(filters.private & filters.me)
+# async def auto_approve_user_on_message(_, message: Message):
 #     PmPermit().approve(message.chat.id)
 #
 #
-# @UserBot.on_message(Filters.command('approve', '.') & Filters.me)
-# async def approve(bot: UserBot, message: Message):
+# @UserBot.on_message(filters.command('approve', '.') & filters.me)
+# async def approve(_, message: Message):
 #     PmPermit().approve(message.chat.id)
 #     await message.edit("You have been approved to PM me. Please continue on with your story.")
 #     sleep(3)
 #     await message.delete()
 #
 #
-# @UserBot.on_message(Filters.command('block', '.') & Filters.me)
-# async def block(bot: UserBot, message: Message):
+# @UserBot.on_message(filters.command('block', '.') & filters.me)
+# async def block(_, message: Message):
 #     PmPermit().block_pm(message.chat.id)
 #     await message.edit("`You have been blocked. Sad day for you init.`")
 #     await UserBot().block_user(message.chat.id)
