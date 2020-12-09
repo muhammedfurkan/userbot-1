@@ -15,12 +15,10 @@ class Fs:
     @property
     def F(self):
         paytext = "FF"
-        pay = "{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}".format(
+        return "{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}".format(
             paytext * 8, paytext * 8, paytext * 2, paytext * 2, paytext * 2,
             paytext * 6, paytext * 6, paytext * 2, paytext * 2, paytext * 2,
             paytext * 2, paytext * 2)
-
-        return pay
 
     BIG_F = (
         "██████╗\n"

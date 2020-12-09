@@ -60,9 +60,9 @@ async def fact(_, message: Message):
         return
 
     await message.edit(f"```Getting {cmd[1]} fact```")
-    link = "https://some-random-api.ml/facts/{animal}"
-
     if cmd[1].lower() in animals:
+        link = "https://some-random-api.ml/facts/{animal}"
+
         fact_link = link.format(animal=cmd[1].lower())
         try:
             data = await AioHttp().get_json(fact_link)
@@ -80,9 +80,9 @@ async def fact(_, message: Message):
 
 
 # Animal image help
-animal_image_help = []
-for x in animals:
-    animal_image_help.append([f".{x}", f"Sends a random picture of a {x}"])
+animal_image_help = [
+    [f".{x}", f"Sends a random picture of a {x}"] for x in animals
+]
 
 animal_image_help.append(['These commands', "Works without the command prefix also"])
 

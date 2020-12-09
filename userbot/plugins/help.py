@@ -60,11 +60,7 @@ def add_command_help(module_name, commands):
     # Key will be group name
     # values will be dict of dicts of key command and value description
 
-    if module_name in CMD_HELP.keys():
-        command_dict = CMD_HELP[module_name]
-    else:
-        command_dict = {}
-
+    command_dict = CMD_HELP[module_name] if module_name in CMD_HELP.keys() else {}
     for x in commands:
         for y in x:
             if y is not x:
